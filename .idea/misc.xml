@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Android_Project/Common/c4TimeFlow/app/src/main/res/drawable/ic_logo.xml" value="0.36354166666666665" />
+        <entry key="..\:/Android_Project/Common/c4TimeFlow/app/src/main/res/drawable/ic_number1.xml" value="0.36354166666666665" />
+        <entry key="..\:/Android_Project/Common/c4TimeFlow/app/src/main/res/layout-large-land/activity_main.xml" value="0.18" />
+        <entry key="..\:/Android_Project/Common/c4TimeFlow/app/src/main/res/layout-large-port/activity.xml" value="0.271484375" />
+        <entry key="..\:/Android_Project/Common/c4TimeFlow/app/src/main/res/layout-large-port/activity_main.xml" value="0.22780054644808742" />
+        <entry key="..\:/Android_Project/Common/c4TimeFlow/app/src/main/res/layout-normal-land/activity_main.xml" value="0.25" />
+        <entry key="..\:/Android_Project/Common/c4TimeFlow/app/src/main/res/layout/activity_main.xml" value="0.2" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
