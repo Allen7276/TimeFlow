@@ -1,11 +1,13 @@
 package com.aseane.timeflow
 
+import android.content.Intent
 import android.content.IntentFilter
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.aseane.timeflow.databinding.ActivityMainBinding
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
@@ -20,12 +22,19 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         alarmViewModel = ViewModelProvider(this)[MainViewModel::class.java]
         handleViewModel()
+        timeFormatViewModel()
 
         val intentFilter = IntentFilter()
-        intentFilter.addAction("android.intent.action.TIME_TICK")
+        intentFilter.addAction(Intent.ACTION_TIME_TICK)
+        intentFilter.addAction(Intent.ACTION_TIME_CHANGED)
+        intentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED)
 
         timeChangeReceiver = TimeBoardcast(alarmViewModel)
         registerReceiver(timeChangeReceiver, intentFilter)
+
+        binding.clockCardView.setOnClickListener {
+            changeCalendarFormat(alarmViewModel)
+        }
     }
 
     override fun onResume() {
@@ -45,6 +54,23 @@ class MainActivity : AppCompatActivity() {
         }
         alarmViewModel.bottomRightModel.observe(this) {
             binding.bottomRightAlarmNumberInAlarmActivity.setImageResource(imageHash[it]!!)
+        }
+    }
+
+    private fun timeFormatViewModel() {
+        // 先对 timeFormat进行初始化
+        if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY)>=12) binding.timeFormatInAlarmActivity.setImageResource(timeFormatHash["pm"]!!)
+        else binding.timeFormatInAlarmActivity.setImageResource(timeFormatHash["am"]!!)
+        alarmViewModel.timeFormat.observe(this) {
+            if (alarmViewModel.timeFormat.value == MainViewModel.TimeFormat.Base24) {
+                if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY)>=12) binding.timeFormatInAlarmActivity.setImageResource(timeFormatHash["pm"]!!)
+                else binding.timeFormatInAlarmActivity.setImageResource(timeFormatHash["am"]!!)
+                binding.timeFormatInAlarmActivity.visibility = View.GONE
+            }
+            else {
+                binding.timeFormatInAlarmActivity.visibility = View.VISIBLE
+            }
+            updateTime(alarmViewModel)
         }
     }
 }
