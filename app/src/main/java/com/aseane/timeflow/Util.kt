@@ -9,7 +9,7 @@ import kotlin.collections.HashMap
  */
 fun getCurrentTime(): List<Int> {
     val calendar = Calendar.getInstance()
-    calendar.timeZone = TimeZone.getTimeZone("GMT+8:00")
+//    calendar.timeZone = TimeZone.getTimeZone("GMT+8:00")
 
     val timeList = ArrayList<Int>().apply {
         add(0, calendar.get(Calendar.HOUR))
