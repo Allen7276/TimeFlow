@@ -4,9 +4,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class MainViewModel: ViewModel() {
-    init {
-        updateTime(this)
+    private var _timeFormat = MutableLiveData<TimeFormat>().apply {
+        value = TimeFormat.Base12
     }
+    val timeFormat get() = _timeFormat
+    fun editTimeFormat(it: TimeFormat) {
+        if (this._timeFormat.value?.baseSystem != it.baseSystem) _timeFormat.value = it
+    }
+
     private var _topLeftModel = MutableLiveData<Int>()
     val topLeftModel get() = _topLeftModel
     fun editTopLeft(it: Int) {
@@ -29,5 +34,10 @@ class MainViewModel: ViewModel() {
     val bottomRightModel get() = _bottomRightModel
     fun editBottomRight(it: Int) {
         if(this._bottomRightModel.value != it) _bottomRightModel.value = it
+    }
+
+    enum class TimeFormat(val baseSystem: Int) {
+        Base12(12),
+        Base24(24)
     }
 }

@@ -43,6 +43,16 @@
                 android:layout_height="300dp"
                 android:layout_alignStart="@+id/unused_textViewIn1RelativeLayout"
                 android:src="@drawable/ic_number0" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/timeFormat_inAlarmActivity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/topRightAlarmNumber_inAlarmActivity"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:src="@drawable/ic_pm" />
         </RelativeLayout>
     </com.google.android.material.card.MaterialCardView>
 
