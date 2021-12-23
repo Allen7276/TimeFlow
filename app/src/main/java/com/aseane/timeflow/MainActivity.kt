@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.aseane.timeflow.Model.changeCalendarFormat
+import com.aseane.timeflow.Model.updateTime
 import com.aseane.timeflow.databinding.ActivityMainBinding
 import java.util.*
 
