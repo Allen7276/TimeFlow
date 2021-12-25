@@ -14,8 +14,11 @@ object Model {
     private fun getCurrentTime(viewModel: MainViewModel): List<Int> {
         val calendar: Calendar = Calendar.getInstance()
         val timeList = ArrayList<Int>().apply {
-            if (viewModel.timeFormat.value == MainViewModel.TimeFormat.Base24) add(0, calendar.get(
-                Calendar.HOUR_OF_DAY))
+            if (viewModel.timeFormat.value == MainViewModel.TimeFormat.Base24) add(
+                0, calendar.get(
+                    Calendar.HOUR_OF_DAY
+                )
+            )
             else {
                 // 这里的判断是因为当检测到中午十二点的时候 Java在十二进制环境下显示为 00PM 与我们正常对中午12点判断时间的体验不一样
                 // 直接将12加上去
@@ -33,12 +36,20 @@ object Model {
      * 如果要使用MVVM架构对这里进行划分 这里属于ViewModel层 解析数据并且发布订阅
      */
     fun updateTime(viewModel: MainViewModel) {
-        val hourLeft: Int = if(getCurrentTime(viewModel)[0]<10) 0 else getCurrentTime(viewModel)[0].toString()[0].digitToInt()
-        val hourRight: Int = if(getCurrentTime(viewModel)[0]<10) getCurrentTime(viewModel)[0] else getCurrentTime(viewModel)[0].toString()[1].digitToInt()
-        val minuteLeft: Int = if(getCurrentTime(viewModel)[1]<10) 0 else getCurrentTime(viewModel)[1].toString()[0].digitToInt()
-        val minuteRight: Int = if(getCurrentTime(viewModel)[1]<10) getCurrentTime(viewModel)[1] else getCurrentTime(viewModel)[1].toString()[1].digitToInt()
-        assert(hourLeft<10 && hourRight<10 && minuteLeft<10 && minuteRight<10)
-        assert(hourLeft>=0 && hourRight>=0 && minuteLeft>=0 && minuteRight>=0)
+        val hourLeft: Int =
+            if (getCurrentTime(viewModel)[0] < 10) 0 else getCurrentTime(viewModel)[0].toString()[0].digitToInt()
+        val hourRight: Int =
+            if (getCurrentTime(viewModel)[0] < 10) getCurrentTime(viewModel)[0] else getCurrentTime(
+                viewModel
+            )[0].toString()[1].digitToInt()
+        val minuteLeft: Int =
+            if (getCurrentTime(viewModel)[1] < 10) 0 else getCurrentTime(viewModel)[1].toString()[0].digitToInt()
+        val minuteRight: Int =
+            if (getCurrentTime(viewModel)[1] < 10) getCurrentTime(viewModel)[1] else getCurrentTime(
+                viewModel
+            )[1].toString()[1].digitToInt()
+        assert(hourLeft < 10 && hourRight < 10 && minuteLeft < 10 && minuteRight < 10)
+        assert(hourLeft >= 0 && hourRight >= 0 && minuteLeft >= 0 && minuteRight >= 0)
         viewModel.editTopLeft(hourLeft)
         viewModel.editTopRight(hourRight)
         viewModel.editBottomLeft(minuteLeft)
@@ -52,8 +63,7 @@ object Model {
     fun changeCalendarFormat(viewModel: MainViewModel) {
         if (viewModel.timeFormat.value == null || viewModel.timeFormat.value == MainViewModel.TimeFormat.Base24) {
             viewModel.editTimeFormat(MainViewModel.TimeFormat.Base12)
-        }
-        else if (viewModel.timeFormat.value == MainViewModel.TimeFormat.Base12) {
+        } else if (viewModel.timeFormat.value == MainViewModel.TimeFormat.Base12) {
             viewModel.editTimeFormat(MainViewModel.TimeFormat.Base24)
         }
     }
