@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.aseane.timeflow.Model.changeCalendarFormat
-import com.aseane.timeflow.Model.updateTime
 import com.aseane.timeflow.databinding.ActivityMainBinding
 import java.util.*
 
@@ -22,8 +20,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         alarmViewModel = ViewModelProvider(this)[MainViewModel::class.java]
         handleViewModel()
+
         timeFormatViewModel()
 
         val intentFilter = IntentFilter()
@@ -35,15 +35,18 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(timeChangeReceiver, intentFilter)
 
         binding.clockCardView.setOnClickListener {
-            changeCalendarFormat(alarmViewModel)
+            alarmViewModel.changeCalendarFormat()
         }
     }
 
     override fun onResume() {
         super.onResume()
-        updateTime(alarmViewModel)
+        alarmViewModel.updateTime()
     }
 
+    /**
+     * ## ViewModel的监听
+     */
     private fun handleViewModel() {
         alarmViewModel.topLeftModel.observe(this) {
             binding.topLeftAlarmNumberInAlarmActivity.setImageResource(imageHash[it]!!)
@@ -57,22 +60,31 @@ class MainActivity : AppCompatActivity() {
         alarmViewModel.bottomRightModel.observe(this) {
             binding.bottomRightAlarmNumberInAlarmActivity.setImageResource(imageHash[it]!!)
         }
-    }
-
-    private fun timeFormatViewModel() {
-        // 先对 timeFormat进行初始化
-        if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY)>=12) binding.timeFormatInAlarmActivity.setImageResource(timeFormatHash["pm"]!!)
-        else binding.timeFormatInAlarmActivity.setImageResource(timeFormatHash["am"]!!)
         alarmViewModel.timeFormat.observe(this) {
             if (alarmViewModel.timeFormat.value == MainViewModel.TimeFormat.Base24) {
-                if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY)>=12) binding.timeFormatInAlarmActivity.setImageResource(timeFormatHash["pm"]!!)
+                if (Calendar.getInstance()
+                        .get(Calendar.HOUR_OF_DAY) >= 12
+                ) binding.timeFormatInAlarmActivity.setImageResource(timeFormatHash["pm"]!!)
                 else binding.timeFormatInAlarmActivity.setImageResource(timeFormatHash["am"]!!)
                 binding.timeFormatInAlarmActivity.visibility = View.GONE
-            }
-            else {
+            } else {
                 binding.timeFormatInAlarmActivity.visibility = View.VISIBLE
             }
-            updateTime(alarmViewModel)
+            alarmViewModel.updateTime()
+        }
+    }
+
+    /**
+     * ## 时间格式的初始化
+     */
+    private fun timeFormatViewModel() {
+        // 先对 timeFormat进行初始化
+        if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 12) {
+            // 中午12点之后
+            binding.timeFormatInAlarmActivity.setImageResource(timeFormatHash["pm"]!!)
+        } else {
+            // 中午12点之前
+            binding.timeFormatInAlarmActivity.setImageResource(timeFormatHash["am"]!!)
         }
     }
 }

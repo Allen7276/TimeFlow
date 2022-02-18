@@ -1,20 +1,27 @@
 package com.aseane.timeflow
 
 import java.util.*
-import kotlin.collections.ArrayList
 
 /**
- * ViewModel层的数据变化
- * 获取时间的方式 Model 与ViewModel进行绑定
+ * # Model层处理数据源
+ *
  */
-object Model {
+class Model private constructor() {
+    companion object {
+        private var instance: Model? = null
+        fun getInstance(): Model {
+            if (instance == null) instance = Model()
+            return instance!!
+        }
+    }
+
     /**
      * MVVM对应的Model层 获取数据
      */
-    private fun getCurrentTime(viewModel: MainViewModel): List<Int> {
+    fun getCurrentTime(timeFormat: MainViewModel.TimeFormat): List<Int> {
         val calendar: Calendar = Calendar.getInstance()
         val timeList = ArrayList<Int>().apply {
-            if (viewModel.timeFormat.value == MainViewModel.TimeFormat.Base24) add(
+            if (timeFormat == MainViewModel.TimeFormat.Base24) add(
                 0, calendar.get(
                     Calendar.HOUR_OF_DAY
                 )
@@ -28,43 +35,5 @@ object Model {
             add(1, calendar.get(Calendar.MINUTE))
         }
         return timeList
-    }
-
-    /**
-     * 刷新时间 updateTime
-     * 会触动ViewModel的变化
-     * 如果要使用MVVM架构对这里进行划分 这里属于ViewModel层 解析数据并且发布订阅
-     */
-    fun updateTime(viewModel: MainViewModel) {
-        val hourLeft: Int =
-            if (getCurrentTime(viewModel)[0] < 10) 0 else getCurrentTime(viewModel)[0].toString()[0].digitToInt()
-        val hourRight: Int =
-            if (getCurrentTime(viewModel)[0] < 10) getCurrentTime(viewModel)[0] else getCurrentTime(
-                viewModel
-            )[0].toString()[1].digitToInt()
-        val minuteLeft: Int =
-            if (getCurrentTime(viewModel)[1] < 10) 0 else getCurrentTime(viewModel)[1].toString()[0].digitToInt()
-        val minuteRight: Int =
-            if (getCurrentTime(viewModel)[1] < 10) getCurrentTime(viewModel)[1] else getCurrentTime(
-                viewModel
-            )[1].toString()[1].digitToInt()
-        assert(hourLeft < 10 && hourRight < 10 && minuteLeft < 10 && minuteRight < 10)
-        assert(hourLeft >= 0 && hourRight >= 0 && minuteLeft >= 0 && minuteRight >= 0)
-        viewModel.editTopLeft(hourLeft)
-        viewModel.editTopRight(hourRight)
-        viewModel.editBottomLeft(minuteLeft)
-        viewModel.editBottomRight(minuteRight)
-    }
-
-    /**
-     * 改变时间的格式 会触动ViewModel的变化
-     * 如果要使用MVVM架构对这里进行划分 这里属于ViewModel层 解析数据并且发布订阅
-     */
-    fun changeCalendarFormat(viewModel: MainViewModel) {
-        if (viewModel.timeFormat.value == null || viewModel.timeFormat.value == MainViewModel.TimeFormat.Base24) {
-            viewModel.editTimeFormat(MainViewModel.TimeFormat.Base12)
-        } else if (viewModel.timeFormat.value == MainViewModel.TimeFormat.Base12) {
-            viewModel.editTimeFormat(MainViewModel.TimeFormat.Base24)
-        }
     }
 }
