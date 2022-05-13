@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidRun20211206/MyOwner/TimeFlow/app/src/main/res/drawable/ic_am.xml" value="0.26" />
+        <entry key="..\:/AndroidRun20211206/MyOwner/TimeFlow/app/src/main/res/drawable/ic_logo.xml" value="0.184" />
+        <entry key="..\:/AndroidRun20211206/MyOwner/TimeFlow/app/src/main/res/drawable/ic_number0.xml" value="0.26" />
         <entry key="..\:/AndroidRun20211206/MyOwner/TimeFlow/app/src/main/res/layout-large-land/activity_main.xml" value="0.33" />
         <entry key="..\:/AndroidRun20211206/MyOwner/TimeFlow/app/src/main/res/layout-large-port/activity_main.xml" value="0.273828125" />
         <entry key="..\:/AndroidRun20211206/MyOwner/TimeFlow/app/src/main/res/layout-normal-land/activity_main.xml" value="0.3090828924162258" />
