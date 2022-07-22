@@ -21,12 +21,9 @@ class Model private constructor() {
     fun getCurrentTime(timeFormat: MainViewModel.TimeFormat): List<Int> {
         val calendar: Calendar = Calendar.getInstance()
         val timeList = ArrayList<Int>().apply {
-            if (timeFormat == MainViewModel.TimeFormat.Base24) add(
-                0, calendar.get(
-                    Calendar.HOUR_OF_DAY
-                )
-            )
-            else {
+            if (timeFormat == MainViewModel.TimeFormat.Base24) {
+                add(0, calendar.get(Calendar.HOUR_OF_DAY))
+            } else {
                 // 这里的判断是因为当检测到中午十二点的时候 Java在十二进制环境下显示为 00PM 与我们正常对中午12点判断时间的体验不一样
                 // 直接将12加上去
                 if (calendar.get(Calendar.HOUR_OF_DAY) == 12) add(0, 12)

@@ -1,5 +1,6 @@
 package com.aseane.timeflow
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
@@ -10,7 +11,7 @@ class MainViewModel : ViewModel() {
      * # 时间格式
      */
     private var _timeFormat = MutableLiveData<TimeFormat>().apply { value = TimeFormat.Base12 }
-    val timeFormat get() = _timeFormat
+    val timeFormat: LiveData<TimeFormat> get() = _timeFormat
     private fun editTimeFormat(it: TimeFormat) {
         if (this._timeFormat.value?.baseSystem != it.baseSystem) _timeFormat.value = it
     }
@@ -19,7 +20,7 @@ class MainViewModel : ViewModel() {
      * # 左上时间数字
      */
     private var _topLeftModel = MutableLiveData<Int>()
-    val topLeftModel get() = _topLeftModel
+    val topLeftModel: LiveData<Int> get() = _topLeftModel
     private fun editTopLeft(it: Int) {
         if (this._topLeftModel.value != it) _topLeftModel.value = it
     }
@@ -28,7 +29,7 @@ class MainViewModel : ViewModel() {
      * # 右上时间数字
      */
     private var _topRightModel = MutableLiveData<Int>()
-    val topRightModel get() = _topRightModel
+    val topRightModel: LiveData<Int> get() = _topRightModel
     private fun editTopRight(it: Int) {
         if (this._topRightModel.value != it) _topRightModel.value = it
     }
@@ -37,7 +38,7 @@ class MainViewModel : ViewModel() {
      * # 左下时间数字
      */
     private var _bottomLeftModel = MutableLiveData<Int>()
-    val bottomLeftModel get() = _bottomLeftModel
+    val bottomLeftModel: LiveData<Int> get() = _bottomLeftModel
     private fun editBottomLeft(it: Int) {
         if (this._bottomLeftModel.value != it) _bottomLeftModel.value = it
     }
@@ -46,7 +47,7 @@ class MainViewModel : ViewModel() {
      * # 右下时间数字
      */
     private var _bottomRightModel = MutableLiveData<Int>()
-    val bottomRightModel get() = _bottomRightModel
+    val bottomRightModel: LiveData<Int> get() = _bottomRightModel
     private fun editBottomRight(it: Int) {
         if (this._bottomRightModel.value != it) _bottomRightModel.value = it
     }

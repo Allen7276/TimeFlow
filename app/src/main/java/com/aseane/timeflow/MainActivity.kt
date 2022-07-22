@@ -68,10 +68,7 @@ class MainActivity : AppCompatActivity() {
         }
         alarmViewModel.timeFormat.observe(this) {
             if (alarmViewModel.timeFormat.value == MainViewModel.TimeFormat.Base24) {
-                if (Calendar.getInstance()
-                        .get(Calendar.HOUR_OF_DAY) >= 12
-                ) binding.timeFormatInAlarmActivity.setImageResource(timeFormatHash["pm"]!!)
-                else binding.timeFormatInAlarmActivity.setImageResource(timeFormatHash["am"]!!)
+                timeFormatViewModel()
                 binding.timeFormatInAlarmActivity.visibility = View.GONE
             } else {
                 binding.timeFormatInAlarmActivity.visibility = View.VISIBLE
