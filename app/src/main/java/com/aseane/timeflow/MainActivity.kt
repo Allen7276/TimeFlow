@@ -15,19 +15,22 @@ class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var alarmViewModel: MainViewModel
-    private lateinit var timeChangeReceiver: TimeBoardcast
+    private val alarmViewModel: MainViewModel by lazy { ViewModelProvider(this)[MainViewModel::class.java] }
+    private lateinit var timeChangeReceiver: TimeBroadcast
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN)
+
+        // 开启全屏
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
 
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        alarmViewModel = ViewModelProvider(this)[MainViewModel::class.java]
         handleViewModel()
 
         timeFormatViewModel()
@@ -36,8 +39,9 @@ class MainActivity : AppCompatActivity() {
         intentFilter.addAction(Intent.ACTION_TIME_TICK)
         intentFilter.addAction(Intent.ACTION_TIME_CHANGED)
         intentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED)
+        intentFilter.addAction(Intent.ACTION_LOCALE_CHANGED)
 
-        timeChangeReceiver = TimeBoardcast(alarmViewModel)
+        timeChangeReceiver = TimeBroadcast(alarmViewModel)
         registerReceiver(timeChangeReceiver, intentFilter)
 
         binding.clockCardView.setOnClickListener {

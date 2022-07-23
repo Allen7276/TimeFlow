@@ -11,14 +11,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TimeFlow">
         <receiver
-            android:name=".TimeBoardcast"
+            android:name=".TimeBroadcast"
             android:enabled="true"
-            android:exported="true"
-            tools:ignore="Instantiatable">
-            <intent-filter>
-                <action android:name="android.intent.action.LOCALE_CHANGED"/>
-            </intent-filter>
-        </receiver>
+            android:exported="false"
+            tools:ignore="Instantiatable"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">
