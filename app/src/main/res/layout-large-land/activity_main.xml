@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
+
+    <data>
+
+        <import type="com.aseane.timeflow.MainViewModel" />
+
+        <variable
+            name="viewModel"
+            type="MainViewModel" />
+    </data>
+
+
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/alarm_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -13,12 +24,14 @@
             android:id="@+id/clock_cardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/black"
+            android:layout_alignEnd="@+id/unused_textView"
+            android:layout_centerVertical="true"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            app:cardCornerRadius="20dp"
-            android:layout_centerVertical="true"
-            android:layout_alignEnd="@+id/unused_textView">
+            android:background="@color/black"
+            android:onClick="@{() -> viewModel.changeCalendarFormat()}"
+            app:cardCornerRadius="20dp">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -31,11 +44,12 @@
                     android:layout_height="400dp"
                     android:layout_alignEnd="@+id/unused_textViewIn1RelativeLayout"
                     android:src="@drawable/ic_number1" />
+
                 <TextView
                     android:id="@+id/unused_textViewIn1RelativeLayout"
                     android:layout_width="1dp"
                     android:layout_height="1dp"
-                    android:layout_centerInParent="true"/>
+                    android:layout_centerInParent="true" />
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/topRightAlarmNumber_inAlarmActivity"
@@ -48,11 +62,11 @@
                     android:id="@+id/timeFormat_inAlarmActivity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/topRightAlarmNumber_inAlarmActivity"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginEnd="20dp"
                     android:layout_marginBottom="20dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignBottom="@+id/topRightAlarmNumber_inAlarmActivity"
-                    android:src="@drawable/ic_pm"/>
+                    android:src="@drawable/ic_pm" />
             </RelativeLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -60,22 +74,24 @@
             android:id="@+id/unused_textView"
             android:layout_width="1dp"
             android:layout_height="1dp"
-            android:layout_centerInParent="true"/>
+            android:layout_centerInParent="true" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/materialCardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="20dp"
+            android:layout_alignStart="@+id/unused_textView"
+            android:layout_centerVertical="true"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:layout_centerVertical="true"
-            android:layout_alignStart="@+id/unused_textView">
+            app:cardCornerRadius="20dp">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/black"
                 android:orientation="horizontal">
+
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/boottomLeftAlarmNumber_inAlarmActivity"
                     android:layout_width="160dp"
@@ -83,11 +99,13 @@
                     android:layout_alignEnd="@+id/unused_textViewIn2RelativeLayout"
                     android:src="@drawable/ic_number0"
                     tools:ignore="ImageContrastCheck" />
+
                 <TextView
                     android:id="@+id/unused_textViewIn2RelativeLayout"
                     android:layout_width="1dp"
                     android:layout_height="1dp"
-                    android:layout_centerInParent="true"/>
+                    android:layout_centerInParent="true" />
+
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/bottomRightAlarmNumber_inAlarmActivity"
                     android:layout_width="160dp"

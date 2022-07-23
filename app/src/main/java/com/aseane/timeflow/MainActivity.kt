@@ -28,7 +28,9 @@ class MainActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
 
-        _binding = ActivityMainBinding.inflate(layoutInflater)
+        _binding = ActivityMainBinding.inflate(layoutInflater).apply {
+            this.viewModel = alarmViewModel
+        }
         setContentView(binding.root)
 
         handleViewModel()
@@ -43,10 +45,6 @@ class MainActivity : AppCompatActivity() {
 
         timeChangeReceiver = TimeBroadcast(alarmViewModel)
         registerReceiver(timeChangeReceiver, intentFilter)
-
-        binding.clockCardView.setOnClickListener {
-            alarmViewModel.changeCalendarFormat()
-        }
     }
 
     override fun onResume() {
