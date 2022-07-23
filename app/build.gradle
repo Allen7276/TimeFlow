@@ -11,8 +11,8 @@ android {
         applicationId "com.aseane.timeflow"
         minSdk 21
         targetSdk 31
-        versionCode 4
-        versionName "1.3.1"
+        versionCode 5
+        versionName "1.3.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
