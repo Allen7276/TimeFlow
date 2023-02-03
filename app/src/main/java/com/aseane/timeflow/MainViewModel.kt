@@ -92,6 +92,19 @@ class MainViewModel : ViewModel() {
         editBottomRight(minuteRight)
     }
 
+    /**
+     * 当前时间的获取
+     */
+    private val _currentDate = MutableLiveData<String>()
+    val currentDate: LiveData<String> = _currentDate
+    /**
+     * 更新日期
+     */
+    fun updateDate() {
+        val date = model.getCurrentDate()
+        _currentDate.value = date
+    }
+
     enum class TimeFormat(val baseSystem: Int) {
         Base12(12),
         Base24(24)

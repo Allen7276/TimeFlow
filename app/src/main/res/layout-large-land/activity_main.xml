@@ -29,8 +29,12 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:background="@color/black"
+            android:backgroundTint="@color/black"
             android:onClick="@{() -> viewModel.changeCalendarFormat()}"
-            app:cardCornerRadius="20dp">
+            android:shadowColor="@color/black"
+            app:cardBackgroundColor="@color/black"
+            app:cardCornerRadius="20dp"
+            app:strokeColor="@color/black">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -66,7 +70,21 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="20dp"
                     android:layout_marginBottom="20dp"
-                    android:src="@drawable/ic_pm" />
+                    android:src="@drawable/ic_pm"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tv_timeFormat_inAlarmActivity"
+                    style="@style/Poppins"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/topRightAlarmNumber_inAlarmActivity"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:textColor="@color/white"
+                    android:textSize="36sp"
+                    tools:text="AM or PM" />
             </RelativeLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -84,7 +102,11 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            app:cardCornerRadius="20dp">
+            android:backgroundTint="@color/black"
+            android:shadowColor="@color/black"
+            app:cardBackgroundColor="@color/black"
+            app:cardCornerRadius="20dp"
+            app:strokeColor="@color/black">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -115,5 +137,16 @@
                     tools:ignore="ImageContrastCheck" />
             </RelativeLayout>
         </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/tv_date"
+            style="@style/Poppins"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/white"
+            android:textSize="36sp"
+            tools:text="02.01.2021" />
     </RelativeLayout>
 </layout>

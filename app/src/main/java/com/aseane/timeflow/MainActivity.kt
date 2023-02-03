@@ -3,12 +3,21 @@ package com.aseane.timeflow
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.aseane.timeflow.databinding.ActivityMainBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -17,16 +26,11 @@ class MainActivity : AppCompatActivity() {
 
     private val alarmViewModel: MainViewModel by lazy { ViewModelProvider(this)[MainViewModel::class.java] }
     private lateinit var timeChangeReceiver: TimeBroadcast
+    private lateinit var dateChangeReceiver: DateBroadcast
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-
-        // 开启全屏
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
 
         _binding = ActivityMainBinding.inflate(layoutInflater).apply {
             this.viewModel = alarmViewModel
@@ -37,19 +41,28 @@ class MainActivity : AppCompatActivity() {
 
         timeFormatViewModel()
 
-        val intentFilter = IntentFilter()
-        intentFilter.addAction(Intent.ACTION_TIME_TICK)
-        intentFilter.addAction(Intent.ACTION_TIME_CHANGED)
-        intentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED)
-        intentFilter.addAction(Intent.ACTION_LOCALE_CHANGED)
+        val intentFilterTimeChange = IntentFilter()
+        intentFilterTimeChange.addAction(Intent.ACTION_TIME_TICK)
+        intentFilterTimeChange.addAction(Intent.ACTION_TIME_CHANGED)
+        intentFilterTimeChange.addAction(Intent.ACTION_TIMEZONE_CHANGED)
+        intentFilterTimeChange.addAction(Intent.ACTION_LOCALE_CHANGED)
 
         timeChangeReceiver = TimeBroadcast(alarmViewModel)
-        registerReceiver(timeChangeReceiver, intentFilter)
+        registerReceiver(timeChangeReceiver, intentFilterTimeChange)
+
+        val intentFilterDateChange = IntentFilter()
+        intentFilterDateChange.addAction(Intent.ACTION_DATE_CHANGED)
+        intentFilterDateChange.addAction(Intent.ACTION_TIMEZONE_CHANGED)
+        intentFilterDateChange.addAction(Intent.ACTION_LOCALE_CHANGED)
+
+        dateChangeReceiver = DateBroadcast(alarmViewModel)
+        registerReceiver(dateChangeReceiver, intentFilterDateChange)
     }
 
     override fun onResume() {
         super.onResume()
         alarmViewModel.updateTime()
+        alarmViewModel.updateDate()
     }
 
     /**
@@ -71,11 +84,16 @@ class MainActivity : AppCompatActivity() {
         alarmViewModel.timeFormat.observe(this) {
             if (alarmViewModel.timeFormat.value == MainViewModel.TimeFormat.Base24) {
                 timeFormatViewModel()
-                binding.timeFormatInAlarmActivity.visibility = View.GONE
+//                binding.timeFormatInAlarmActivity.visibility = View.GONE
+                binding.tvTimeFormatInAlarmActivity.visibility = View.GONE
             } else {
-                binding.timeFormatInAlarmActivity.visibility = View.VISIBLE
+//                binding.timeFormatInAlarmActivity.visibility = View.VISIBLE
+                binding.tvTimeFormatInAlarmActivity.visibility = View.VISIBLE
             }
             alarmViewModel.updateTime()
+        }
+        alarmViewModel.currentDate.observe(this) {
+            binding.tvDate.text = it
         }
     }
 
@@ -86,10 +104,22 @@ class MainActivity : AppCompatActivity() {
         // 先对 timeFormat进行初始化
         if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 12) {
             // 中午12点之后
-            binding.timeFormatInAlarmActivity.setImageResource(timeFormatHash["pm"]!!)
+//            binding.timeFormatInAlarmActivity.setImageResource(timeFormatHash["pm"]!!)
+            binding.tvTimeFormatInAlarmActivity.text = this.baseContext.getString(R.string.pm)
         } else {
             // 中午12点之前
-            binding.timeFormatInAlarmActivity.setImageResource(timeFormatHash["am"]!!)
+//            binding.timeFormatInAlarmActivity.setImageResource(timeFormatHash["am"]!!)
+            binding.tvTimeFormatInAlarmActivity.text = this.baseContext.getString(R.string.am)
+        }
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            // 开启全屏 隐藏状态栏
+            ViewCompat.getWindowInsetsController(window.decorView)?.apply {
+                this.hide(WindowInsetsCompat.Type.statusBars())
+            }
         }
     }
 }

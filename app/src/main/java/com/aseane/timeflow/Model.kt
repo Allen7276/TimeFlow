@@ -1,5 +1,6 @@
 package com.aseane.timeflow
 
+import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -32,5 +33,14 @@ class Model private constructor() {
             add(1, calendar.get(Calendar.MINUTE))
         }
         return timeList
+    }
+
+    /**
+     * 生成一段mm/dd/yyyy的[String]时间类型
+     */
+    fun getCurrentDate(): String {
+        val date = Date()
+        val simpleDateFormat = SimpleDateFormat("MM.dd.yyyy", Locale.CHINA)
+        return simpleDateFormat.format(date)
     }
 }

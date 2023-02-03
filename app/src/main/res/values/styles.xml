@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Poppins">
+        <item name="android:fontFamily">@font/poppins_bold</item>
+        <item name="android:lineSpacingExtra">1sp</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+</resources>
