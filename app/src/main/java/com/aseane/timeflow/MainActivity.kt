@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import com.aseane.timeflow.databinding.ActivityMainBinding
@@ -28,6 +28,17 @@ class MainActivity : AppCompatActivity() {
             this.viewModel = alarmViewModel
         }
         setContentView(binding.root)
+
+        binding.materialCardView.setOnClickListener {
+            binding.tvDate.visibility = when (binding.tvDate.visibility) {
+                View.GONE, View.INVISIBLE -> {
+                    View.VISIBLE
+                }
+                else -> {
+                    View.GONE
+                }
+            }
+        }
 
         handleViewModel()
 
@@ -107,10 +118,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (hasFocus) {
-            // 开启全屏 隐藏状态栏
-            ViewCompat.getWindowInsetsController(window.decorView)?.apply {
+        // 开启全屏 隐藏状态栏
+        WindowCompat.getInsetsController(window, window.decorView)?.apply {
+            if (hasFocus) {
                 this.hide(WindowInsetsCompat.Type.statusBars())
+            } else {
+                this.show(WindowInsetsCompat.Type.statusBars())
             }
         }
     }
