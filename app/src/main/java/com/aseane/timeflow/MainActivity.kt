@@ -5,6 +5,7 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
 import android.view.Window
+import android.view.WindowInsets
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -22,7 +23,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
 
         _binding = ActivityMainBinding.inflate(layoutInflater).apply {
             this.viewModel = alarmViewModel
@@ -118,12 +119,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        // 开启全屏 隐藏状态栏
-        WindowCompat.getInsetsController(window, window.decorView)?.apply {
+        // 开启全屏
+        // 隐藏顶部状态栏和使用全面屏手势操作时候的底部状态栏
+        WindowCompat.getInsetsController(window, window.decorView).apply {
             if (hasFocus) {
                 this.hide(WindowInsetsCompat.Type.statusBars())
+                this.hide(WindowInsetsCompat.Type.navigationBars())
             } else {
                 this.show(WindowInsetsCompat.Type.statusBars())
+                this.show(WindowInsetsCompat.Type.navigationBars())
             }
         }
     }
