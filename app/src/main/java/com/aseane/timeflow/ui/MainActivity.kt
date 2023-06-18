@@ -1,23 +1,37 @@
-package com.aseane.timeflow
+package com.aseane.timeflow.ui
 
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
 import android.view.Window
-import android.view.WindowInsets
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.aseane.timeflow.DateBroadcast
+import com.aseane.timeflow.R
+import com.aseane.timeflow.TimeBroadcast
 import com.aseane.timeflow.databinding.ActivityMainBinding
-import java.util.*
+import com.aseane.timeflow.imageHash
+import com.aseane.timeflow.viewmodel.MainViewModel
+import com.aseane.timeflow.viewmodel.MainViewModelProviderFactory
+import kotlinx.coroutines.launch
+import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
 
-    private val alarmViewModel: MainViewModel by lazy { ViewModelProvider(this)[MainViewModel::class.java] }
+    private val mainViewModel: MainViewModel by lazy {
+        ViewModelProvider(
+            this,
+            MainViewModelProviderFactory()
+        )[MainViewModel::class.java]
+    }
     private lateinit var timeChangeReceiver: TimeBroadcast
     private lateinit var dateChangeReceiver: DateBroadcast
 
@@ -25,25 +39,51 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
 
-        _binding = ActivityMainBinding.inflate(layoutInflater).apply {
-            this.viewModel = alarmViewModel
-        }
+        _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.materialCardView.setOnClickListener {
-            binding.tvDate.visibility = when (binding.tvDate.visibility) {
-                View.GONE, View.INVISIBLE -> {
-                    View.VISIBLE
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mainViewModel.isDateShowDataStoreFlow.collect {
+                    binding.tvDate.visibility = if (it) View.GONE else View.VISIBLE
                 }
-                else -> {
-                    View.GONE
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mainViewModel.timeFormatRecordDataStoreFlow.collect {
+                    binding.tvTimeFormatInAlarmActivity.visibility =
+                        if (it) View.VISIBLE else View.GONE
+                }
+            }
+        }
+
+        binding.materialCardView.setOnClickListener {
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    mainViewModel.isDateShow(binding.tvDate.visibility in setOf(View.VISIBLE))
+                }
+            }
+        }
+
+        binding.clockCardView.setOnClickListener {
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    mainViewModel.timeFormatRecordUpdate(
+                        binding.tvTimeFormatInAlarmActivity.visibility in setOf(
+                            View.GONE
+                        )
+                    )
+                    mainViewModel.updateTime()
+                    updateTimeFormat()
                 }
             }
         }
 
         handleViewModel()
 
-        timeFormatViewModel()
+        updateTimeFormat()
 
         val intentFilterTimeChange = IntentFilter()
         intentFilterTimeChange.addAction(Intent.ACTION_TIME_TICK)
@@ -51,7 +91,7 @@ class MainActivity : AppCompatActivity() {
         intentFilterTimeChange.addAction(Intent.ACTION_TIMEZONE_CHANGED)
         intentFilterTimeChange.addAction(Intent.ACTION_LOCALE_CHANGED)
 
-        timeChangeReceiver = TimeBroadcast(alarmViewModel)
+        timeChangeReceiver = TimeBroadcast(mainViewModel)
         registerReceiver(timeChangeReceiver, intentFilterTimeChange)
 
         val intentFilterDateChange = IntentFilter()
@@ -59,44 +99,37 @@ class MainActivity : AppCompatActivity() {
         intentFilterDateChange.addAction(Intent.ACTION_TIMEZONE_CHANGED)
         intentFilterDateChange.addAction(Intent.ACTION_LOCALE_CHANGED)
 
-        dateChangeReceiver = DateBroadcast(alarmViewModel)
+        dateChangeReceiver = DateBroadcast(mainViewModel)
         registerReceiver(dateChangeReceiver, intentFilterDateChange)
     }
 
     override fun onResume() {
         super.onResume()
-        alarmViewModel.updateTime()
-        alarmViewModel.updateDate()
+        mainViewModel.updateTime()
+        mainViewModel.updateDate()
     }
 
     /**
      * ## ViewModel的监听
      */
     private fun handleViewModel() {
-        alarmViewModel.topLeftModel.observe(this) {
+        mainViewModel.topLeftModel.observe(this) {
             binding.topLeftAlarmNumberInAlarmActivity.setImageResource(imageHash[it]!!)
         }
-        alarmViewModel.topRightModel.observe(this) {
+
+        mainViewModel.topRightModel.observe(this) {
             binding.topRightAlarmNumberInAlarmActivity.setImageResource(imageHash[it]!!)
         }
-        alarmViewModel.bottomLeftModel.observe(this) {
+
+        mainViewModel.bottomLeftModel.observe(this) {
             binding.boottomLeftAlarmNumberInAlarmActivity.setImageResource(imageHash[it]!!)
         }
-        alarmViewModel.bottomRightModel.observe(this) {
+
+        mainViewModel.bottomRightModel.observe(this) {
             binding.bottomRightAlarmNumberInAlarmActivity.setImageResource(imageHash[it]!!)
         }
-        alarmViewModel.timeFormat.observe(this) {
-            if (alarmViewModel.timeFormat.value == MainViewModel.TimeFormat.Base24) {
-                timeFormatViewModel()
-//                binding.timeFormatInAlarmActivity.visibility = View.GONE
-                binding.tvTimeFormatInAlarmActivity.visibility = View.GONE
-            } else {
-//                binding.timeFormatInAlarmActivity.visibility = View.VISIBLE
-                binding.tvTimeFormatInAlarmActivity.visibility = View.VISIBLE
-            }
-            alarmViewModel.updateTime()
-        }
-        alarmViewModel.currentDate.observe(this) {
+
+        mainViewModel.currentDate.observe(this) {
             binding.tvDate.text = it
         }
     }
@@ -104,7 +137,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * ## 时间格式的初始化
      */
-    private fun timeFormatViewModel() {
+    private fun updateTimeFormat() {
         // 先对 timeFormat进行初始化
         if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 12) {
             // 中午12点之后

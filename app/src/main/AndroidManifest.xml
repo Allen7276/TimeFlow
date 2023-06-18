@@ -4,6 +4,7 @@
     package="com.aseane.timeflow">
 
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_logo"
         android:label="@string/app_name"
@@ -14,9 +15,9 @@
             android:name=".TimeBroadcast"
             android:enabled="true"
             android:exported="false"
-            tools:ignore="Instantiatable"/>
+            tools:ignore="Instantiatable" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

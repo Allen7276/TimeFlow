@@ -15,11 +15,3 @@ val imageHash = HashMap<Int, Int>().apply {
     put(8, R.drawable.ic_number8)
     put(9, R.drawable.ic_number9)
 }
-
-/**
- * 时间哈希表的映射 timeFormatHash
- */
-val timeFormatHash = HashMap<String, Int>().apply {
-    put("am", R.drawable.ic_am)
-    put("pm", R.drawable.ic_pm)
-}

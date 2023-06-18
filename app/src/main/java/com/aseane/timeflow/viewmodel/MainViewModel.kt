@@ -1,10 +1,16 @@
-package com.aseane.timeflow
+package com.aseane.timeflow.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.aseane.timeflow.model.DataStoreModel
+import com.aseane.timeflow.model.Model
+import java.io.Serializable
 
-class MainViewModel : ViewModel() {
+class MainViewModel(
+    context: Context?
+) : ViewModel() {
     private val model: Model = Model.getInstance()
 
     /**
@@ -53,18 +59,6 @@ class MainViewModel : ViewModel() {
     }
 
     /**
-     * 改变时间的格式 会触动ViewModel的变化
-     * 如果要使用MVVM架构对这里进行划分 这里属于ViewModel层 解析数据并且发布订阅
-     */
-    fun changeCalendarFormat() {
-        if (_timeFormat.value == null || _timeFormat.value == TimeFormat.Base24) {
-            editTimeFormat(TimeFormat.Base12)
-        } else if (_timeFormat.value == TimeFormat.Base12) {
-            editTimeFormat(TimeFormat.Base24)
-        }
-    }
-
-    /**
      * 刷新时间 updateTime
      * 会触动ViewModel的变化
      * 如果要使用MVVM架构对这里进行划分 这里属于ViewModel层 解析数据并且发布订阅
@@ -72,14 +66,16 @@ class MainViewModel : ViewModel() {
     fun updateTime() {
         val hourLeft: Int =
             if (model.getCurrentTime(_timeFormat.value!!)[0] < 10) 0 else model.getCurrentTime(
-                _timeFormat.value!!)[0].toString()[0].digitToInt()
+                _timeFormat.value!!
+            )[0].toString()[0].digitToInt()
         val hourRight: Int =
             if (model.getCurrentTime(_timeFormat.value!!)[0] < 10) model.getCurrentTime(_timeFormat.value!!)[0] else model.getCurrentTime(
                 _timeFormat.value!!
             )[0].toString()[1].digitToInt()
         val minuteLeft: Int =
             if (model.getCurrentTime(_timeFormat.value!!)[1] < 10) 0 else model.getCurrentTime(
-                _timeFormat.value!!)[1].toString()[0].digitToInt()
+                _timeFormat.value!!
+            )[1].toString()[0].digitToInt()
         val minuteRight: Int =
             if (model.getCurrentTime(_timeFormat.value!!)[1] < 10) model.getCurrentTime(_timeFormat.value!!)[1] else model.getCurrentTime(
                 _timeFormat.value!!
@@ -97,6 +93,7 @@ class MainViewModel : ViewModel() {
      */
     private val _currentDate = MutableLiveData<String>()
     val currentDate: LiveData<String> = _currentDate
+
     /**
      * 更新日期
      */
@@ -108,5 +105,16 @@ class MainViewModel : ViewModel() {
     enum class TimeFormat(val baseSystem: Int) {
         Base12(12),
         Base24(24)
+    }
+
+    private val dataStoreModel: DataStoreModel = DataStoreModel.getInstance(context)
+    val isDateShowDataStoreFlow = dataStoreModel.isDateShow
+    suspend fun isDateShow(value: Boolean) {
+        dataStoreModel.isDateShow(value)
+    }
+
+    val timeFormatRecordDataStoreFlow = dataStoreModel.timeFormatRecord
+    suspend fun timeFormatRecordUpdate(value: Boolean) {
+        dataStoreModel.timeFormat(value)
     }
 }

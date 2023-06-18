@@ -1,5 +1,6 @@
-package com.aseane.timeflow
+package com.aseane.timeflow.model
 
+import com.aseane.timeflow.viewmodel.MainViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
