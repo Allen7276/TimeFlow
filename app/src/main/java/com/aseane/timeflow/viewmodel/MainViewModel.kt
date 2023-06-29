@@ -4,9 +4,11 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.viewModelScope
 import com.aseane.timeflow.model.DataStoreModel
 import com.aseane.timeflow.model.Model
-import java.io.Serializable
+import kotlinx.coroutines.launch
 
 class MainViewModel(
     context: Context?
@@ -17,8 +19,8 @@ class MainViewModel(
      * # 时间格式
      */
     private var _timeFormat = MutableLiveData<TimeFormat>().apply { value = TimeFormat.Base12 }
-    val timeFormat: LiveData<TimeFormat> get() = _timeFormat
-    private fun editTimeFormat(it: TimeFormat) {
+    val timeFormat: LiveData<TimeFormat> = _timeFormat
+    fun editTimeFormat(it: TimeFormat) {
         if (this._timeFormat.value?.baseSystem != it.baseSystem) _timeFormat.value = it
     }
 
@@ -27,6 +29,7 @@ class MainViewModel(
      */
     private var _topLeftModel = MutableLiveData<Int>()
     val topLeftModel: LiveData<Int> get() = _topLeftModel
+    val topLeftModelFlowOf = _topLeftModel.asFlow()
     private fun editTopLeft(it: Int) {
         if (this._topLeftModel.value != it) _topLeftModel.value = it
     }
@@ -36,6 +39,7 @@ class MainViewModel(
      */
     private var _topRightModel = MutableLiveData<Int>()
     val topRightModel: LiveData<Int> get() = _topRightModel
+    val topRightModelFlow = topRightModel.asFlow()
     private fun editTopRight(it: Int) {
         if (this._topRightModel.value != it) _topRightModel.value = it
     }
@@ -45,6 +49,7 @@ class MainViewModel(
      */
     private var _bottomLeftModel = MutableLiveData<Int>()
     val bottomLeftModel: LiveData<Int> get() = _bottomLeftModel
+    val bottomLeftModelFlowOf = this._bottomLeftModel.asFlow()
     private fun editBottomLeft(it: Int) {
         if (this._bottomLeftModel.value != it) _bottomLeftModel.value = it
     }
@@ -54,6 +59,7 @@ class MainViewModel(
      */
     private var _bottomRightModel = MutableLiveData<Int>()
     val bottomRightModel: LiveData<Int> get() = _bottomRightModel
+    val bottomRightModelFlowOf = _bottomRightModel.asFlow()
     private fun editBottomRight(it: Int) {
         if (this._bottomRightModel.value != it) _bottomRightModel.value = it
     }
@@ -108,13 +114,18 @@ class MainViewModel(
     }
 
     private val dataStoreModel: DataStoreModel = DataStoreModel.getInstance(context)
+
     val isDateShowDataStoreFlow = dataStoreModel.isDateShow
-    suspend fun isDateShow(value: Boolean) {
-        dataStoreModel.isDateShow(value)
+    fun isDateShow(value: Boolean) {
+        viewModelScope.launch {
+            dataStoreModel.isDateShow(value)
+        }
     }
 
     val timeFormatRecordDataStoreFlow = dataStoreModel.timeFormatRecord
-    suspend fun timeFormatRecordUpdate(value: Boolean) {
-        dataStoreModel.timeFormat(value)
+    fun timeFormatRecordUpdate(value: Boolean) {
+        viewModelScope.launch {
+            dataStoreModel.timeFormat(value)
+        }
     }
 }

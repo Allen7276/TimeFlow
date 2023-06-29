@@ -28,8 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     private val mainViewModel: MainViewModel by lazy {
         ViewModelProvider(
-            this,
-            MainViewModelProviderFactory()
+            this, MainViewModelProviderFactory()
         )[MainViewModel::class.java]
     }
     private lateinit var timeChangeReceiver: TimeBroadcast
@@ -42,10 +41,16 @@ class MainActivity : AppCompatActivity() {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        mainViewModel.timeFormat.observe(this) {
+            this.updateTimeFormat()
+            mainViewModel.updateTime()
+        }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mainViewModel.isDateShowDataStoreFlow.collect {
-                    binding.tvDate.visibility = if (it) View.GONE else View.VISIBLE
+                    binding.tvDate.visibility = if (it) View.VISIBLE else View.GONE
+                    mainViewModel.updateDate()
                 }
             }
         }
@@ -55,30 +60,23 @@ class MainActivity : AppCompatActivity() {
                 mainViewModel.timeFormatRecordDataStoreFlow.collect {
                     binding.tvTimeFormatInAlarmActivity.visibility =
                         if (it) View.VISIBLE else View.GONE
+                    mainViewModel.editTimeFormat(if (it) MainViewModel.TimeFormat.Base24 else MainViewModel.TimeFormat.Base12)
                 }
             }
         }
 
         binding.materialCardView.setOnClickListener {
-            lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    mainViewModel.isDateShow(binding.tvDate.visibility in setOf(View.VISIBLE))
-                }
-            }
+            val afterChangeDateShow = (binding.tvDate.visibility == View.GONE)
+            mainViewModel.isDateShow(afterChangeDateShow)
         }
 
         binding.clockCardView.setOnClickListener {
-            lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    mainViewModel.timeFormatRecordUpdate(
-                        binding.tvTimeFormatInAlarmActivity.visibility in setOf(
-                            View.GONE
-                        )
-                    )
-                    mainViewModel.updateTime()
-                    updateTimeFormat()
-                }
-            }
+            mainViewModel.timeFormatRecordUpdate(
+                binding.tvTimeFormatInAlarmActivity.visibility in setOf(
+                    View.GONE
+                )
+            )
+            mainViewModel.updateTime()
         }
 
         handleViewModel()
@@ -106,7 +104,6 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         mainViewModel.updateTime()
-        mainViewModel.updateDate()
     }
 
     /**
@@ -138,16 +135,12 @@ class MainActivity : AppCompatActivity() {
      * ## 时间格式的初始化
      */
     private fun updateTimeFormat() {
-        // 先对 timeFormat进行初始化
-        if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 12) {
-            // 中午12点之后
-//            binding.timeFormatInAlarmActivity.setImageResource(timeFormatHash["pm"]!!)
-            binding.tvTimeFormatInAlarmActivity.text = this.baseContext.getString(R.string.pm)
-        } else {
-            // 中午12点之前
-//            binding.timeFormatInAlarmActivity.setImageResource(timeFormatHash["am"]!!)
-            binding.tvTimeFormatInAlarmActivity.text = this.baseContext.getString(R.string.am)
-        }
+        binding.tvTimeFormatInAlarmActivity.text =
+            if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 12) {
+                this.baseContext.getString(R.string.pm)
+            } else {
+                this.baseContext.getString(R.string.am)
+            }
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
