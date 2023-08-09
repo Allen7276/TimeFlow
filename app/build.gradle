@@ -5,14 +5,14 @@ plugins {
 }
 
 android {
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.aseane.timeflow"
         minSdk 21
-        targetSdk 33
-        versionCode 10
-        versionName "1.4.4"
+        targetSdk 34
+        versionCode 11
+        versionName "1.4.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

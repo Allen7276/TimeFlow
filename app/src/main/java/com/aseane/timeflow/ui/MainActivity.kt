@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
@@ -59,7 +60,7 @@ class MainActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mainViewModel.timeFormatRecordDataStoreFlow.collect {
                     binding.tvTimeFormatInAlarmActivity.visibility =
-                        if (it) View.VISIBLE else View.GONE
+                        if (it) View.GONE else View.VISIBLE
                     mainViewModel.editTimeFormat(if (it) MainViewModel.TimeFormat.Base24 else MainViewModel.TimeFormat.Base12)
                 }
             }
@@ -73,7 +74,7 @@ class MainActivity : AppCompatActivity() {
         binding.clockCardView.setOnClickListener {
             mainViewModel.timeFormatRecordUpdate(
                 binding.tvTimeFormatInAlarmActivity.visibility in setOf(
-                    View.GONE
+                    View.VISIBLE
                 )
             )
             mainViewModel.updateTime()
@@ -90,7 +91,13 @@ class MainActivity : AppCompatActivity() {
         intentFilterTimeChange.addAction(Intent.ACTION_LOCALE_CHANGED)
 
         timeChangeReceiver = TimeBroadcast(mainViewModel)
-        registerReceiver(timeChangeReceiver, intentFilterTimeChange)
+
+        ContextCompat.registerReceiver(
+            applicationContext,
+            timeChangeReceiver,
+            intentFilterTimeChange,
+            ContextCompat.RECEIVER_NOT_EXPORTED
+        )
 
         val intentFilterDateChange = IntentFilter()
         intentFilterDateChange.addAction(Intent.ACTION_DATE_CHANGED)
