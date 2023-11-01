@@ -158,9 +158,6 @@ class MainActivity : AppCompatActivity() {
             if (hasFocus) {
                 this.hide(WindowInsetsCompat.Type.statusBars())
                 this.hide(WindowInsetsCompat.Type.navigationBars())
-            } else {
-                this.show(WindowInsetsCompat.Type.statusBars())
-                this.show(WindowInsetsCompat.Type.navigationBars())
             }
         }
     }
