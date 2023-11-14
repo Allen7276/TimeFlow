@@ -4,10 +4,8 @@ import android.app.Application
 
 class MyApplication : Application() {
     companion object {
-        private var instance: Application? = null
-        fun getGlobalApplication(): Application? {
-            return instance
-        }
+        var instance: Application? = null
+            private set
     }
 
     override fun onCreate() {

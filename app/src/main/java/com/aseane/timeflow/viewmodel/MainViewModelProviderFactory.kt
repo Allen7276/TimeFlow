@@ -9,7 +9,7 @@ class MainViewModelProviderFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         with(modelClass) {
             return when {
-                isAssignableFrom(MainViewModel::class.java) -> MainViewModel(context = MyApplication.getGlobalApplication()?.applicationContext)
+                isAssignableFrom(MainViewModel::class.java) -> MainViewModel(context = MyApplication.instance?.applicationContext)
                 else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             } as T
         }

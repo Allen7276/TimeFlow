@@ -11,8 +11,8 @@ android {
         applicationId "com.aseane.timeflow"
         minSdk 21
         targetSdk 34
-        versionCode 11
-        versionName "1.4.5"
+        versionCode 12
+        versionName "1.4.6"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -36,11 +36,10 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.10.1'
-    implementation group: 'androidx.lifecycle', name: 'lifecycle-livedata-ktx', version: '2.6.1'
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2"
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.10.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 

@@ -9,18 +9,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.aseane.timeflow.DateBroadcast
 import com.aseane.timeflow.R
 import com.aseane.timeflow.TimeBroadcast
 import com.aseane.timeflow.databinding.ActivityMainBinding
 import com.aseane.timeflow.imageHash
+import com.aseane.timeflow.lifecycleUtils.LifecycleUtils.quickStartCoroutineScope
 import com.aseane.timeflow.viewmodel.MainViewModel
 import com.aseane.timeflow.viewmodel.MainViewModelProviderFactory
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collectLatest
 import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
@@ -42,29 +40,8 @@ class MainActivity : AppCompatActivity() {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        mainViewModel.timeFormat.observe(this) {
-            this.updateTimeFormat()
-            mainViewModel.updateTime()
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                mainViewModel.isDateShowDataStoreFlow.collect {
-                    binding.tvDate.visibility = if (it) View.VISIBLE else View.GONE
-                    mainViewModel.updateDate()
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                mainViewModel.timeFormatRecordDataStoreFlow.collect {
-                    binding.tvTimeFormatInAlarmActivity.visibility =
-                        if (it) View.GONE else View.VISIBLE
-                    mainViewModel.editTimeFormat(if (it) MainViewModel.TimeFormat.Base24 else MainViewModel.TimeFormat.Base12)
-                }
-            }
-        }
+        handleViewModel()
+        updateTimeFormat()
 
         binding.materialCardView.setOnClickListener {
             val afterChangeDateShow = (binding.tvDate.visibility == View.GONE)
@@ -80,17 +57,15 @@ class MainActivity : AppCompatActivity() {
             mainViewModel.updateTime()
         }
 
-        handleViewModel()
-
-        updateTimeFormat()
-
         val intentFilterTimeChange = IntentFilter()
         intentFilterTimeChange.addAction(Intent.ACTION_TIME_TICK)
         intentFilterTimeChange.addAction(Intent.ACTION_TIME_CHANGED)
         intentFilterTimeChange.addAction(Intent.ACTION_TIMEZONE_CHANGED)
         intentFilterTimeChange.addAction(Intent.ACTION_LOCALE_CHANGED)
 
-        timeChangeReceiver = TimeBroadcast(mainViewModel)
+        timeChangeReceiver = TimeBroadcast {
+            mainViewModel.updateTime()
+        }
 
         ContextCompat.registerReceiver(
             applicationContext,
@@ -106,6 +81,9 @@ class MainActivity : AppCompatActivity() {
 
         dateChangeReceiver = DateBroadcast(mainViewModel)
         registerReceiver(dateChangeReceiver, intentFilterDateChange)
+
+        mainViewModel.updateDate()
+        mainViewModel.updateTime()
     }
 
     override fun onResume() {
@@ -117,24 +95,56 @@ class MainActivity : AppCompatActivity() {
      * ## ViewModel的监听
      */
     private fun handleViewModel() {
-        mainViewModel.topLeftModel.observe(this) {
-            binding.topLeftAlarmNumberInAlarmActivity.setImageResource(imageHash[it]!!)
+        quickStartCoroutineScope {
+            mainViewModel.topLeftModelFlowOf.collectLatest {
+                binding.topLeftAlarmNumberInAlarmActivity.setImageResource(imageHash[it]!!)
+            }
         }
 
-        mainViewModel.topRightModel.observe(this) {
-            binding.topRightAlarmNumberInAlarmActivity.setImageResource(imageHash[it]!!)
+        quickStartCoroutineScope {
+            mainViewModel.topRightModelFlowOf.collectLatest {
+                binding.topRightAlarmNumberInAlarmActivity.setImageResource(imageHash[it]!!)
+            }
         }
 
-        mainViewModel.bottomLeftModel.observe(this) {
-            binding.boottomLeftAlarmNumberInAlarmActivity.setImageResource(imageHash[it]!!)
+        quickStartCoroutineScope {
+            mainViewModel.bottomLeftModelFlowOf.collectLatest {
+                binding.boottomLeftAlarmNumberInAlarmActivity.setImageResource(imageHash[it]!!)
+            }
         }
 
-        mainViewModel.bottomRightModel.observe(this) {
-            binding.bottomRightAlarmNumberInAlarmActivity.setImageResource(imageHash[it]!!)
+        quickStartCoroutineScope {
+            mainViewModel.bottomRightModelFlowOf.collectLatest {
+                binding.bottomRightAlarmNumberInAlarmActivity.setImageResource(imageHash[it]!!)
+            }
         }
 
-        mainViewModel.currentDate.observe(this) {
-            binding.tvDate.text = it
+        quickStartCoroutineScope {
+            mainViewModel.currentDate.collectLatest {
+                binding.tvDate.text = it
+            }
+        }
+
+        quickStartCoroutineScope {
+            mainViewModel.timeFormat.collectLatest {
+                updateTimeFormat()
+                mainViewModel.updateTime()
+            }
+        }
+
+        quickStartCoroutineScope {
+            mainViewModel.isDateShowDataStoreFlow.collectLatest {
+                binding.tvDate.visibility = if (it) View.VISIBLE else View.GONE
+                mainViewModel.updateDate()
+            }
+        }
+
+        quickStartCoroutineScope {
+            mainViewModel.timeFormatRecordDataStoreFlow.collectLatest {
+                binding.tvTimeFormatInAlarmActivity.visibility =
+                    if (it) View.GONE else View.VISIBLE
+                mainViewModel.editTimeFormat(if (it) MainViewModel.TimeFormat.Base24 else MainViewModel.TimeFormat.Base12)
+            }
         }
     }
 

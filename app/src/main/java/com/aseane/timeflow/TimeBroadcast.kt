@@ -5,8 +5,8 @@ import android.content.Context
 import android.content.Intent
 import com.aseane.timeflow.viewmodel.MainViewModel
 
-class TimeBroadcast(private val viewModel: MainViewModel) : BroadcastReceiver() {
+class TimeBroadcast(private val updateTime: () -> Unit) : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent) {
-        viewModel.updateTime()
+        updateTime.invoke()
     }
 }
