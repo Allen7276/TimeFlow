@@ -1,3 +1,15 @@
+### 1.4.7 | 12/29/2023
+- 修改包名，由aseane改为apollo
+- 加入UnitTest测试代码
+
+### 1.4.6 | 11/14/2023
+- 移除LiveData，改为Flow
+- 升级一些库的版本
+
+###  1.4.4 and 1.4.5 | 06/19/2023
+- 修复1.4.3版本改动API时以及部分逻辑时出现的一些BUG
+- 升级targetVersion为Android14
+
 ###  1.3.1 | 02/23/2022
 - requestWindowFeature(Window.FEATURE_NO_TITLE)
   window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
