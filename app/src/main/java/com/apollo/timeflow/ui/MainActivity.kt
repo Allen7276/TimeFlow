@@ -1,4 +1,4 @@
-package com.aseane.timeflow.ui
+package com.apollo.timeflow.ui
 
 import android.content.Intent
 import android.content.IntentFilter
@@ -10,20 +10,19 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
-import com.aseane.timeflow.DateBroadcast
-import com.aseane.timeflow.R
-import com.aseane.timeflow.TimeBroadcast
-import com.aseane.timeflow.databinding.ActivityMainBinding
-import com.aseane.timeflow.imageHash
-import com.aseane.timeflow.lifecycleUtils.LifecycleUtils.quickStartCoroutineScope
-import com.aseane.timeflow.viewmodel.MainViewModel
-import com.aseane.timeflow.viewmodel.MainViewModelProviderFactory
+import com.apollo.timeflow.DateBroadcast
+import com.apollo.timeflow.R
+import com.apollo.timeflow.TimeBroadcast
+import com.apollo.timeflow.databinding.ActivityMainBinding
+import com.apollo.timeflow.imageHash
+import com.apollo.timeflow.lifecycleUtils.LifecycleUtils.quickStartCoroutineScope
+import com.apollo.timeflow.viewmodel.MainViewModel
+import com.apollo.timeflow.viewmodel.MainViewModelProviderFactory
 import kotlinx.coroutines.flow.collectLatest
 import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
-    private var _binding: ActivityMainBinding? = null
-    private val binding get() = _binding!!
+    private var binding: ActivityMainBinding? = null
 
     private val mainViewModel: MainViewModel by lazy {
         ViewModelProvider(
@@ -36,21 +35,20 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
-
-        _binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding?.root)
 
         handleViewModel()
         updateTimeFormat()
 
-        binding.materialCardView.setOnClickListener {
-            val afterChangeDateShow = (binding.tvDate.visibility == View.GONE)
+        binding?.materialCardView?.setOnClickListener {
+            val afterChangeDateShow = (binding?.tvDate?.visibility == View.GONE)
             mainViewModel.isDateShow(afterChangeDateShow)
         }
 
-        binding.clockCardView.setOnClickListener {
+        binding?.clockCardView?.setOnClickListener {
             mainViewModel.timeFormatRecordUpdate(
-                binding.tvTimeFormatInAlarmActivity.visibility in setOf(
+                binding?.tvTimeFormatInAlarmActivity?.visibility in setOf(
                     View.VISIBLE
                 )
             )
@@ -97,31 +95,31 @@ class MainActivity : AppCompatActivity() {
     private fun handleViewModel() {
         quickStartCoroutineScope {
             mainViewModel.topLeftModelFlowOf.collectLatest {
-                binding.topLeftAlarmNumberInAlarmActivity.setImageResource(imageHash[it]!!)
+                binding?.topLeftAlarmNumberInAlarmActivity?.setImageResource(imageHash[it]!!)
             }
         }
 
         quickStartCoroutineScope {
             mainViewModel.topRightModelFlowOf.collectLatest {
-                binding.topRightAlarmNumberInAlarmActivity.setImageResource(imageHash[it]!!)
+                binding?.topRightAlarmNumberInAlarmActivity?.setImageResource(imageHash[it]!!)
             }
         }
 
         quickStartCoroutineScope {
             mainViewModel.bottomLeftModelFlowOf.collectLatest {
-                binding.boottomLeftAlarmNumberInAlarmActivity.setImageResource(imageHash[it]!!)
+                binding?.boottomLeftAlarmNumberInAlarmActivity?.setImageResource(imageHash[it]!!)
             }
         }
 
         quickStartCoroutineScope {
             mainViewModel.bottomRightModelFlowOf.collectLatest {
-                binding.bottomRightAlarmNumberInAlarmActivity.setImageResource(imageHash[it]!!)
+                binding?.bottomRightAlarmNumberInAlarmActivity?.setImageResource(imageHash[it]!!)
             }
         }
 
         quickStartCoroutineScope {
             mainViewModel.currentDate.collectLatest {
-                binding.tvDate.text = it
+                binding?.tvDate?.text = it
             }
         }
 
@@ -134,14 +132,14 @@ class MainActivity : AppCompatActivity() {
 
         quickStartCoroutineScope {
             mainViewModel.isDateShowDataStoreFlow.collectLatest {
-                binding.tvDate.visibility = if (it) View.VISIBLE else View.GONE
+                binding?.tvDate?.visibility = if (it) View.VISIBLE else View.GONE
                 mainViewModel.updateDate()
             }
         }
 
         quickStartCoroutineScope {
             mainViewModel.timeFormatRecordDataStoreFlow.collectLatest {
-                binding.tvTimeFormatInAlarmActivity.visibility =
+                binding?.tvTimeFormatInAlarmActivity?.visibility =
                     if (it) View.GONE else View.VISIBLE
                 mainViewModel.editTimeFormat(if (it) MainViewModel.TimeFormat.Base24 else MainViewModel.TimeFormat.Base12)
             }
@@ -152,7 +150,7 @@ class MainActivity : AppCompatActivity() {
      * ## 时间格式的初始化
      */
     private fun updateTimeFormat() {
-        binding.tvTimeFormatInAlarmActivity.text =
+        binding?.tvTimeFormatInAlarmActivity?.text =
             if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 12) {
                 this.baseContext.getString(R.string.pm)
             } else {

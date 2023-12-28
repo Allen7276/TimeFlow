@@ -1,4 +1,4 @@
-package com.aseane.timeflow
+package com.apollo.timeflow
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.aseane.timeflow", appContext.packageName)
+        assertEquals("com.apollo.timeflow", appContext.packageName)
     }
 }

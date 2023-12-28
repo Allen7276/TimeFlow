@@ -1,6 +1,6 @@
-package com.aseane.timeflow.model
+package com.apollo.timeflow.model
 
-import com.aseane.timeflow.viewmodel.MainViewModel
+import com.apollo.timeflow.viewmodel.MainViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 

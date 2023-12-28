@@ -1,7 +1,6 @@
-package com.aseane.timeflow.lifecycleUtils
+package com.apollo.timeflow.lifecycleUtils
 
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
