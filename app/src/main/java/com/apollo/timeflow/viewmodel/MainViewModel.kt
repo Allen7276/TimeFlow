@@ -1,10 +1,9 @@
-package com.aseane.timeflow.viewmodel
+package com.apollo.timeflow.viewmodel
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aseane.timeflow.model.DataStoreModel
-import com.aseane.timeflow.model.Model
+import com.apollo.timeflow.model.DataStoreModel
+import com.apollo.timeflow.model.Model
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -13,9 +12,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MainViewModel(
-    context: Context?
+    private val dataStoreModel: DataStoreModel,
+    private val timeModel: Model
 ) : ViewModel() {
-    private val model: Model = Model.getInstance()
 
     /**
      * # 时间格式
@@ -72,23 +71,23 @@ class MainViewModel(
     fun updateTime() {
         viewModelScope.launch(Dispatchers.IO) {
             val hourLeft: Int =
-                if (model.getCurrentTime(_timeFormat.value)[0] < 10) 0 else model.getCurrentTime(
+                if (timeModel.getCurrentTime(_timeFormat.value)[0] < 10) 0 else timeModel.getCurrentTime(
                     _timeFormat.value
                 )[0].toString()[0].digitToInt()
             val hourRight: Int =
-                if (model.getCurrentTime(_timeFormat.value)[0] < 10) model.getCurrentTime(
+                if (timeModel.getCurrentTime(_timeFormat.value)[0] < 10) timeModel.getCurrentTime(
                     _timeFormat.value
-                )[0] else model.getCurrentTime(
+                )[0] else timeModel.getCurrentTime(
                     _timeFormat.value
                 )[0].toString()[1].digitToInt()
             val minuteLeft: Int =
-                if (model.getCurrentTime(_timeFormat.value)[1] < 10) 0 else model.getCurrentTime(
+                if (timeModel.getCurrentTime(_timeFormat.value)[1] < 10) 0 else timeModel.getCurrentTime(
                     _timeFormat.value
                 )[1].toString()[0].digitToInt()
             val minuteRight: Int =
-                if (model.getCurrentTime(_timeFormat.value)[1] < 10) model.getCurrentTime(
+                if (timeModel.getCurrentTime(_timeFormat.value)[1] < 10) timeModel.getCurrentTime(
                     _timeFormat.value
-                )[1] else model.getCurrentTime(
+                )[1] else timeModel.getCurrentTime(
                     _timeFormat.value
                 )[1].toString()[1].digitToInt()
             assert(hourLeft < 10 && hourRight < 10 && minuteLeft < 10 && minuteRight < 10)
@@ -111,7 +110,7 @@ class MainViewModel(
      */
     fun updateDate() {
         viewModelScope.launch(Dispatchers.IO) {
-            _currentDate.emit(model.getCurrentDate())
+            _currentDate.emit(timeModel.getCurrentDate())
         }
     }
 
@@ -119,8 +118,6 @@ class MainViewModel(
         Base12,
         Base24
     }
-
-    private val dataStoreModel: DataStoreModel = DataStoreModel.getInstance(context)
 
     val isDateShowDataStoreFlow = dataStoreModel.isDateShow
     fun isDateShow(value: Boolean) {
