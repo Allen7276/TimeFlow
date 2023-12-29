@@ -1,4 +1,4 @@
-package com.apollo.timeflow.model
+package com.apollo.timeflow.service
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -13,7 +13,10 @@ import kotlinx.coroutines.flow.map
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "Time Unit Record DataStore")
 
-class DataStoreModel private constructor(
+/**
+ *  Service 获取数据
+ */
+class TimeFormatRecordDataStoreService private constructor(
     private val context: Context? = null
 ) {
     val isDateShow: Flow<Boolean> = context?.dataStore?.data
@@ -44,11 +47,11 @@ class DataStoreModel private constructor(
 
         @SuppressLint("StaticFieldLeak")
         @Volatile
-        private var instance: DataStoreModel? = null
+        private var instance: TimeFormatRecordDataStoreService? = null
 
-        fun getInstance(context: Context?): DataStoreModel = synchronized(this) {
+        fun getInstance(context: Context?): TimeFormatRecordDataStoreService = synchronized(this) {
             if (instance == null) {
-                instance = DataStoreModel(context)
+                instance = TimeFormatRecordDataStoreService(context)
             }
             return instance!!
         }

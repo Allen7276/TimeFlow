@@ -3,8 +3,8 @@ package com.apollo.timeflow.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.apollo.timeflow.MyApplication
-import com.apollo.timeflow.model.DataStoreModel
-import com.apollo.timeflow.model.Model
+import com.apollo.timeflow.service.TimeFormatRecordDataStoreService
+import com.apollo.timeflow.service.TimeDataService
 
 class MainViewModelProviderFactory : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
@@ -12,10 +12,10 @@ class MainViewModelProviderFactory : ViewModelProvider.Factory {
         with(modelClass) {
             return when {
                 isAssignableFrom(MainViewModel::class.java) -> MainViewModel(
-                    DataStoreModel.getInstance(
+                    TimeFormatRecordDataStoreService.getInstance(
                         MyApplication.instance?.applicationContext
                     ),
-                    Model.getInstance()
+                    TimeDataService.getInstance()
                 )
 
                 else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")

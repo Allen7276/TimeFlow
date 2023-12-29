@@ -1,18 +1,17 @@
-package com.apollo.timeflow.model
+package com.apollo.timeflow.service
 
 import com.apollo.timeflow.viewmodel.MainViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * # Model层处理数据源
- *
+ * Service 获取数据
  */
-class Model private constructor() {
+class TimeDataService private constructor() {
     companion object {
-        private var instance: Model? = null
-        fun getInstance(): Model {
-            if (instance == null) instance = Model()
+        private var instance: TimeDataService? = null
+        fun getInstance(): TimeDataService {
+            if (instance == null) instance = TimeDataService()
             return instance!!
         }
     }

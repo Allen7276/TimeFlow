@@ -2,8 +2,8 @@ package com.apollo.timeflow.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.apollo.timeflow.model.DataStoreModel
-import com.apollo.timeflow.model.Model
+import com.apollo.timeflow.service.TimeFormatRecordDataStoreService
+import com.apollo.timeflow.service.TimeDataService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -11,9 +11,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+/**
+ * 依赖注入的方式，方便后面写测试
+ */
 class MainViewModel(
-    private val dataStoreModel: DataStoreModel,
-    private val timeModel: Model
+    private val timeFormatRecordService: TimeFormatRecordDataStoreService,
+    private val timeDataService: TimeDataService
 ) : ViewModel() {
 
     /**
@@ -71,23 +74,23 @@ class MainViewModel(
     fun updateTime() {
         viewModelScope.launch(Dispatchers.IO) {
             val hourLeft: Int =
-                if (timeModel.getCurrentTime(_timeFormat.value)[0] < 10) 0 else timeModel.getCurrentTime(
+                if (timeDataService.getCurrentTime(_timeFormat.value)[0] < 10) 0 else timeDataService.getCurrentTime(
                     _timeFormat.value
                 )[0].toString()[0].digitToInt()
             val hourRight: Int =
-                if (timeModel.getCurrentTime(_timeFormat.value)[0] < 10) timeModel.getCurrentTime(
+                if (timeDataService.getCurrentTime(_timeFormat.value)[0] < 10) timeDataService.getCurrentTime(
                     _timeFormat.value
-                )[0] else timeModel.getCurrentTime(
+                )[0] else timeDataService.getCurrentTime(
                     _timeFormat.value
                 )[0].toString()[1].digitToInt()
             val minuteLeft: Int =
-                if (timeModel.getCurrentTime(_timeFormat.value)[1] < 10) 0 else timeModel.getCurrentTime(
+                if (timeDataService.getCurrentTime(_timeFormat.value)[1] < 10) 0 else timeDataService.getCurrentTime(
                     _timeFormat.value
                 )[1].toString()[0].digitToInt()
             val minuteRight: Int =
-                if (timeModel.getCurrentTime(_timeFormat.value)[1] < 10) timeModel.getCurrentTime(
+                if (timeDataService.getCurrentTime(_timeFormat.value)[1] < 10) timeDataService.getCurrentTime(
                     _timeFormat.value
-                )[1] else timeModel.getCurrentTime(
+                )[1] else timeDataService.getCurrentTime(
                     _timeFormat.value
                 )[1].toString()[1].digitToInt()
             assert(hourLeft < 10 && hourRight < 10 && minuteLeft < 10 && minuteRight < 10)
@@ -110,7 +113,7 @@ class MainViewModel(
      */
     fun updateDate() {
         viewModelScope.launch(Dispatchers.IO) {
-            _currentDate.emit(timeModel.getCurrentDate())
+            _currentDate.emit(timeDataService.getCurrentDate())
         }
     }
 
@@ -119,17 +122,17 @@ class MainViewModel(
         Base24
     }
 
-    val isDateShowDataStoreFlow = dataStoreModel.isDateShow
+    val isDateShowDataStoreFlow = timeFormatRecordService.isDateShow
     fun isDateShow(value: Boolean) {
         viewModelScope.launch {
-            dataStoreModel.isDateShow(value)
+            timeFormatRecordService.isDateShow(value)
         }
     }
 
-    val timeFormatRecordDataStoreFlow = dataStoreModel.timeFormatRecord
+    val timeFormatRecordDataStoreFlow = timeFormatRecordService.timeFormatRecord
     fun timeFormatRecordUpdate(value: Boolean) {
         viewModelScope.launch {
-            dataStoreModel.timeFormat(value)
+            timeFormatRecordService.timeFormat(value)
         }
     }
 }
