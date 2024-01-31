@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">TimeFlow</string>
+
+    <string name="am" translatable="false">AM</string>
+
+    <string name="pm" translatable="false">PM</string>
+
+    <string name="international_setting">Internationalization Setting</string>
+
+    <string name="time_formattion">Time Formattion</string>
+
+    <string name="date_formattion">Date Formattion</string>
+
+    <string name="date_switch">Date Switch</string>
+</resources>

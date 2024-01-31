@@ -11,12 +11,16 @@ class MainViewModelProviderFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         with(modelClass) {
             return when {
-                isAssignableFrom(MainViewModel::class.java) -> MainViewModel(
+                isAssignableFrom(TimeDataViewModel::class.java) -> TimeDataViewModel(
                     TimeFormatRecordDataStoreService.getInstance(
                         MyApplication.instance?.applicationContext
                     ),
                     TimeDataService.getInstance()
                 )
+
+                isAssignableFrom(SettingDataViewModel::class.java) -> SettingDataViewModel()
+
+                isAssignableFrom(RouteViewModel::class.java) -> RouteViewModel()
 
                 else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             } as T

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="international_setting">國際化設置</string>
+
+    <string name="time_formattion">時間格式</string>
+
+    <string name="date_formattion">日期格式</string>
+
+    <string name="date_switch">日期顯示與否</string>
+</resources>

@@ -33,10 +33,10 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/topLeftAlarmNumber_inAlarmActivity"
-                    android:layout_width="120dp"
-                    android:layout_height="300dp"
+                    android:layout_width="160dp"
+                    android:layout_height="400dp"
                     android:layout_alignEnd="@+id/unused_textViewIn1RelativeLayout"
-                    android:src="@drawable/ic_number1" />
+                    tools:src="@drawable/ic_number0" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/unused_textViewIn1RelativeLayout"
@@ -46,10 +46,10 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/topRightAlarmNumber_inAlarmActivity"
-                    android:layout_width="120dp"
-                    android:layout_height="300dp"
+                    android:layout_width="160dp"
+                    android:layout_height="400dp"
                     android:layout_alignStart="@+id/unused_textViewIn1RelativeLayout"
-                    android:src="@drawable/ic_number0" />
+                    tools:src="@drawable/ic_number0" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_timeFormat_inAlarmActivity"
@@ -61,7 +61,7 @@
                     android:layout_marginEnd="20dp"
                     android:layout_marginBottom="20dp"
                     android:textColor="@color/white"
-                    android:textSize="24sp"
+                    android:textSize="36sp"
                     tools:text="AM or PM" />
             </RelativeLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -94,10 +94,10 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/boottomLeftAlarmNumber_inAlarmActivity"
-                    android:layout_width="120dp"
-                    android:layout_height="300dp"
+                    android:layout_width="160dp"
+                    android:layout_height="400dp"
                     android:layout_alignEnd="@+id/unused_textViewIn2RelativeLayout"
-                    android:src="@drawable/ic_number0"
+                    tools:src="@drawable/ic_number0"
                     tools:ignore="ImageContrastCheck" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -108,10 +108,10 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/bottomRightAlarmNumber_inAlarmActivity"
-                    android:layout_width="120dp"
-                    android:layout_height="300dp"
+                    android:layout_width="160dp"
+                    android:layout_height="400dp"
                     android:layout_alignStart="@+id/unused_textViewIn2RelativeLayout"
-                    android:src="@drawable/ic_number0"
+                    tools:src="@drawable/ic_number0"
                     tools:ignore="ImageContrastCheck" />
             </RelativeLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -124,7 +124,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:textColor="@color/white"
-            android:textSize="14sp"
+            android:textSize="36sp"
             tools:text="02.01.2021" />
     </RelativeLayout>
 </layout>
