@@ -52,12 +52,12 @@ class TimeFragment : BaseFragment<FragmentTimeBinding>() {
 
         binding.materialCardView.setOnClickListener {
             // 2.x-release的功能，暂不开放，后续维护
-             routeViewModel?.navigateToSettingFragment()
+//             routeViewModel?.navigateToSettingFragment()
 
             // 1.x and 2.x-beta 的功能，升级2.x-release，后续会删除这个交互，放入Setting中
-//            dataViewModel.isDateShow(
-//                binding.tvDate.visibility != View.VISIBLE
-//            )
+            dataViewModel.isDateShow(
+                binding.tvDate.visibility != View.VISIBLE
+            )
         }
 
         binding.clockCardView.setOnClickListener {
