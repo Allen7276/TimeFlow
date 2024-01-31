@@ -46,7 +46,6 @@ class SettingFragment : BaseFragment<FragmentSettingsBinding>() {
             override fun handleOnBackPressed() {
                 activity?.onWindowFocusChanged(true)
                 routeViewModel?.navigateToTimeFragment()
-                this.isEnabled = false
             }
         }
 
