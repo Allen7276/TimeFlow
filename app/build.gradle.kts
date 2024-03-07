@@ -13,7 +13,7 @@ android {
         applicationId = "com.apollo.timeflow"
         minSdk = 21
         targetSdk = 34
-        versionCode = 14
+        versionCode = 15
         versionName = "2.0.0-beta1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
