@@ -37,6 +37,7 @@ android {
     }
     buildFeatures {
         dataBinding = true
+        compose = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
@@ -63,4 +64,21 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    val composeBomVersion = "2024.02.02"
+    val composeBom = platform("androidx.compose:compose-bom:${composeBomVersion}")
+    implementation(composeBom)
+    androidTestImplementation(composeBom)
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.foundation:foundation")
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    implementation("androidx.compose.material:material-icons-core")
+    implementation("androidx.compose.material:material-icons-extended")
+    // use it to calculate the device's size
+    implementation("androidx.compose.material3:material3-window-size-class")
+    implementation("androidx.activity:activity-compose")
 }
