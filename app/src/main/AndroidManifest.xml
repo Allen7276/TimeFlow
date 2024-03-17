@@ -16,7 +16,7 @@
             android:exported="false"
             tools:ignore="Instantiatable" />
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.compose.MainActivityByCompose"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
