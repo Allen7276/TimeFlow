@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.ComposeView
-//import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -49,7 +49,7 @@ class MainActivityByCompose : AppCompatActivity() {
         mainViewModel.updateDate()
     }
 
-//    @Preview
+    @Preview
     @Composable
     private fun ComposeUI() {
         Scaffold { padding ->
