@@ -56,7 +56,7 @@ fun CardLargeLandSpace(
                         isShowTimeFormat = viewModel.timeFormatRecordDataStoreFlow.collectAsState(
                             initial = false
                         ),
-                        currentTimeFormat = viewModel.currentDate.collectAsState(initial = "AM"),
+                        amOrPm = viewModel.amOrPm,
                         leftNumber = viewModel.hourLeftNumberState,
                         rightNumber = viewModel.hourRightNumberState,
                     )
@@ -66,7 +66,7 @@ fun CardLargeLandSpace(
                         deviceTypes = deviceTypes,
                         clickable = rightOnClick,
                         isShowTimeFormat = remember { mutableStateOf(false) },
-                        currentTimeFormat = viewModel.currentDate.collectAsState(initial = "AM"),
+                        amOrPm = null,
                         leftNumber = viewModel.minuteLeftNumberState,
                         rightNumber = viewModel.minuteRightNumberState,
                     )

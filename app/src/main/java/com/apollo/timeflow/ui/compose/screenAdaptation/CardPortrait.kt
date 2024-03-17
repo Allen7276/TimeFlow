@@ -8,9 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -46,8 +44,8 @@ fun CardLargePortrait(
             TimeCard(
                 deviceTypes = deviceTypes,
                 clickable = leftOnClick,
-                isShowTimeFormat = viewModel.isDateShowDataStoreFlow.collectAsState(initial = true),
-                currentTimeFormat = viewModel.amOrPm,
+                isShowTimeFormat = viewModel.timeFormatRecordDataStoreFlow.collectAsState(initial = true),
+                amOrPm = viewModel.amOrPm,
                 leftNumber = viewModel.hourLeftNumberState,
                 rightNumber = viewModel.hourRightNumberState,
             )
@@ -57,13 +55,13 @@ fun CardLargePortrait(
                 deviceTypes = deviceTypes,
                 clickable = rightOnClick,
                 isShowTimeFormat = remember { mutableStateOf(false) },
-                currentTimeFormat = null,
+                amOrPm = null,
                 leftNumber = viewModel.minuteLeftNumberState,
                 rightNumber = viewModel.minuteRightNumberState,
             )
         }
 
-        if (viewModel.timeFormatRecordDataStoreFlow.collectAsState(initial = false).value) {
+        if (viewModel.isDateShowDataStoreFlow.collectAsState(initial = false).value) {
             Box(contentAlignment = Alignment.BottomCenter) {
                 Text(
                     viewModel.currentDate.collectAsState(initial = "").value,
