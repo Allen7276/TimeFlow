@@ -2,6 +2,7 @@ package com.apollo.timeflow.viewmodel
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -53,6 +54,9 @@ class MainViewModel(
         _minuteRightNumberState.intValue = it
     }
 
+    private val _amOrPm = mutableStateOf("")
+    val amOrPm: State<String> = _amOrPm
+
     fun updateTime() {
         viewModelScope.launch(Dispatchers.IO) {
             val timeFormat = _timeFormat.value ?: TimeFormat.Base12
@@ -80,6 +84,7 @@ class MainViewModel(
 
             assert(hourLeft < 10 && hourRight < 10 && minuteLeft < 10 && minuteRight < 10)
             assert(hourLeft >= 0 && hourRight >= 0 && minuteLeft >= 0 && minuteRight >= 0)
+            _amOrPm.value = timeDataService.amOrPm() ?: ""
             editHourLeft(hourLeft)
             editHourRight(hourRight)
             editMinuteLeft(minuteLeft)

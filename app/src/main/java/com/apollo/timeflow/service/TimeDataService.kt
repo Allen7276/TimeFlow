@@ -1,5 +1,7 @@
 package com.apollo.timeflow.service
 
+import com.apollo.timeflow.MyApplication
+import com.apollo.timeflow.R
 import com.apollo.timeflow.viewmodel.MainViewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -25,6 +27,11 @@ class TimeDataService private constructor() {
             add(1, calendar.get(Calendar.MINUTE))
         }
         return timeList
+    }
+
+    fun amOrPm(): String? {
+        val calendar: Calendar = Calendar.getInstance()
+        return if (calendar.get(Calendar.HOUR_OF_DAY) > 12) MyApplication.instance?.getString(R.string.pm) else MyApplication.instance?.getString(R.string.am)
     }
 
     fun getCurrentDate(): String {

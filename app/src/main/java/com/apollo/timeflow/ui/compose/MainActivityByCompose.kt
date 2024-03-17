@@ -95,6 +95,7 @@ class MainActivityByCompose : AppCompatActivity() {
                     mainViewModel.isDateShow(!(isShowDateFormatState.value ?: false))
                 },
                 isShowTimeFormat = isShowTimeFormatState,
+                currentTimeFormat = mainViewModel.amOrPm,
                 isShowDateFormat = isShowDateFormatState,
                 currentDateFormat = currentDateFormat,
                 hourLeftNumber = mainViewModel.hourLeftNumberState,
