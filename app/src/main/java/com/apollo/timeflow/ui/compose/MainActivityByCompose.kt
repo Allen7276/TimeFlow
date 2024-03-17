@@ -14,8 +14,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
-import com.apollo.timeflow.DateBroadcast
-import com.apollo.timeflow.TimeBroadcast
+import com.apollo.timeflow.boardcast.DateBroadcast
+import com.apollo.timeflow.boardcast.TimeBroadcast
 import com.apollo.timeflow.getDeviceType
 import com.apollo.timeflow.ui.compose.screenAdaptation.Card
 import com.apollo.timeflow.viewmodel.MainViewModel
