@@ -37,7 +37,7 @@ fun TimeCard(
     deviceTypes: Device = Device.Phone(),
     clickable: () -> Unit = {},
     isShowTimeFormat: State<Boolean?> = mutableStateOf(true),
-    currentTimeFormat: State<String?> = mutableStateOf("AM"),
+    currentTimeFormat: State<String?>? = mutableStateOf("AM"),
     leftNumber: State<Int> = mutableIntStateOf(0),
     rightNumber: State<Int> = mutableIntStateOf(1),
 ) {
@@ -87,7 +87,7 @@ fun TimeCard(
             }
             if (isShowTimeFormat.value == true) {
                 Text(
-                    currentTimeFormat.value ?: "",
+                    currentTimeFormat?.value ?: "",
                     modifier = Modifier.align(Alignment.BottomEnd),
                     color = Color.White,
                     fontFamily = FontFamily(

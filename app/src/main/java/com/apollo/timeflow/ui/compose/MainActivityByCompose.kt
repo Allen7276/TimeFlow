@@ -7,8 +7,7 @@ import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
@@ -18,11 +17,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.apollo.timeflow.DateBroadcast
 import com.apollo.timeflow.TimeBroadcast
 import com.apollo.timeflow.getDeviceType
-import com.apollo.timeflow.lifecycleUtils.LifecycleUtils.quickStartCoroutineScope
 import com.apollo.timeflow.ui.compose.screenAdaptation.Card
 import com.apollo.timeflow.viewmodel.MainViewModel
 import com.apollo.timeflow.viewmodel.MainViewModelProviderFactory
-import kotlinx.coroutines.flow.collectLatest
 
 class MainActivityByCompose : AppCompatActivity() {
     private lateinit var mainViewModel: MainViewModel
@@ -55,61 +52,25 @@ class MainActivityByCompose : AppCompatActivity() {
         Scaffold { padding ->
             padding.hashCode()
 
-            val isShowTimeFormatState = remember {
-                mutableStateOf<Boolean?>(null)
-            }
-
-            val isShowDateFormatState = remember {
-                mutableStateOf<Boolean?>(null)
-            }
-
-            val currentDateFormat = remember {
-                mutableStateOf<String?>(null)
-            }
-
-            quickStartCoroutineScope {
-                mainViewModel.timeFormatRecordDataStoreFlow.collectLatest {
-                    isShowTimeFormatState.value = it
-                    mainViewModel.editTimeFormat(it)
-                }
-            }
-
-            quickStartCoroutineScope {
-                mainViewModel.isDateShowDataStoreFlow.collectLatest {
-                    isShowDateFormatState.value = it
-                }
-            }
-
-            quickStartCoroutineScope {
-                mainViewModel.currentDate.collectLatest {
-                    currentDateFormat.value = it
-                }
-            }
+            val isShowTimeFormatState =
+                mainViewModel.timeFormatRecordDataStoreFlow.collectAsState(initial = false)
+            val isShowDateFormatState =
+                mainViewModel.isDateShowDataStoreFlow.collectAsState(initial = false)
 
             Card(
                 deviceTypes = getDeviceType(),
                 leftOnClick = {
-                    mainViewModel.timeFormatRecordUpdate(!(isShowTimeFormatState.value ?: false))
+                    mainViewModel.timeFormatRecordUpdate(!isShowTimeFormatState.value)
                 },
                 rightOnClick = {
-                    mainViewModel.isDateShow(!(isShowDateFormatState.value ?: false))
+                    mainViewModel.isDateShow(!isShowDateFormatState.value)
                 },
-                isShowTimeFormat = isShowTimeFormatState,
-                currentTimeFormat = mainViewModel.amOrPm,
-                isShowDateFormat = isShowDateFormatState,
-                currentDateFormat = currentDateFormat,
-                hourLeftNumber = mainViewModel.hourLeftNumberState,
-                hourRightNumber = mainViewModel.hourRightNumberState,
-                minuteLeftNumber = mainViewModel.minuteLeftNumberState,
-                minuteRightNumber = mainViewModel.minuteRightNumberState,
             )
         }
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        // 开启全屏
-        // 隐藏顶部状态栏和使用全面屏手势操作时候的底部状态栏
         WindowCompat.getInsetsController(window, window.decorView).apply {
             if (hasFocus) {
                 this.hide(WindowInsetsCompat.Type.statusBars())

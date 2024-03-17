@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,6 +22,7 @@ import com.apollo.timeflow.Device
 import com.apollo.timeflow.defaultFontFamily
 import com.apollo.timeflow.getFontSize
 import com.apollo.timeflow.ui.compose.component.TimeCard
+import com.apollo.timeflow.viewmodel.MainViewModel
 
 @Preview(
     widthDp = 411,
@@ -31,14 +33,7 @@ fun CardLargePortrait(
     deviceTypes: Device = Device.Phone(),
     leftOnClick: () -> Unit = {},
     rightOnClick: () -> Unit = {},
-    isShowTimeFormat: State<Boolean?> = mutableStateOf(true),
-    currentTimeFormat: State<String?> = mutableStateOf("AM"),
-    isShowDateFormat: State<Boolean?> = mutableStateOf(true),
-    currentDateFormat: State<String?> = mutableStateOf("02.01.2021"),
-    hourLeftNumber: State<Int> = mutableIntStateOf(0),
-    hourRightNumber: State<Int> = mutableIntStateOf(9),
-    minuteLeftNumber: State<Int> = mutableIntStateOf(1),
-    minuteRightNumber: State<Int> = mutableIntStateOf(5),
+    viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
 ) {
     Column(
         modifier = Modifier
@@ -51,10 +46,10 @@ fun CardLargePortrait(
             TimeCard(
                 deviceTypes = deviceTypes,
                 clickable = leftOnClick,
-                isShowTimeFormat = isShowTimeFormat,
-                currentTimeFormat = currentTimeFormat,
-                leftNumber = hourLeftNumber,
-                rightNumber = hourRightNumber,
+                isShowTimeFormat = viewModel.isDateShowDataStoreFlow.collectAsState(initial = true),
+                currentTimeFormat = viewModel.amOrPm,
+                leftNumber = viewModel.hourLeftNumberState,
+                rightNumber = viewModel.hourRightNumberState,
             )
         }
         Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
@@ -62,16 +57,16 @@ fun CardLargePortrait(
                 deviceTypes = deviceTypes,
                 clickable = rightOnClick,
                 isShowTimeFormat = remember { mutableStateOf(false) },
-                currentTimeFormat = currentTimeFormat,
-                leftNumber = minuteLeftNumber,
-                rightNumber = minuteRightNumber,
+                currentTimeFormat = null,
+                leftNumber = viewModel.minuteLeftNumberState,
+                rightNumber = viewModel.minuteRightNumberState,
             )
         }
 
-        if (isShowDateFormat.value == true) {
+        if (viewModel.timeFormatRecordDataStoreFlow.collectAsState(initial = false).value) {
             Box(contentAlignment = Alignment.BottomCenter) {
                 Text(
-                    currentDateFormat.value ?: "",
+                    viewModel.currentDate.collectAsState(initial = "").value,
                     color = Color.White,
                     fontSize = getFontSize(deviceTypes),
                     modifier = Modifier.padding(bottom = 10.dp),

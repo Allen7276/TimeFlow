@@ -1,6 +1,8 @@
 package com.apollo.timeflow.viewmodel
 
 import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
@@ -11,6 +13,7 @@ import com.apollo.timeflow.service.TimeFormatRecordDataStoreService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -113,7 +116,10 @@ class MainViewModel(
         }
     }
 
-    val timeFormatRecordDataStoreFlow = timeFormatRecordService.timeFormatRecord
+    val timeFormatRecordDataStoreFlow = timeFormatRecordService.timeFormatRecord.map {
+        this.editTimeFormat(it)
+        it
+    }
     fun timeFormatRecordUpdate(value: Boolean) {
         viewModelScope.launch {
             timeFormatRecordService.timeFormat(value)
