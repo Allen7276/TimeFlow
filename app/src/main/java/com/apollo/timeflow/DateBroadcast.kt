@@ -5,8 +5,8 @@ import android.content.Context
 import android.content.Intent
 import com.apollo.timeflow.viewmodel.MainViewModel
 
-class DateBroadcast(private val viewModel: MainViewModel): BroadcastReceiver() {
+class DateBroadcast(private val updateDate: () -> Unit): BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        viewModel.updateDate()
+        updateDate.invoke()
     }
 }
